@@ -44,7 +44,6 @@ namespace Booking.Web.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
         public IActionResult Login()
         {
             // Display the login form
@@ -52,7 +51,6 @@ namespace Booking.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> LoginAsync(LoginModel loginModel)
         {
             // Validate the username and password. You can use your authentication logic here.
@@ -91,6 +89,22 @@ namespace Booking.Web.Controllers
 
             var userid = (int)id;
             var user = await this._userRepository.GetUser(userid);
+            return View(user);
+        }
+        [HttpGet]
+        public async Task<IActionResult> Profile()
+        {
+            var userid = String.Empty;
+            Request.Cookies.TryGetValue(Constants.UserIdCookie, out userid);
+            if (userid == null)
+            {
+                return NotFound();
+            }
+            var user = await this._userRepository.GetUser(int.Parse(userid));
+            if(user.Packages == null)
+            {
+                user.Packages = new List<Package>();
+            }
             return View(user);
         }
 

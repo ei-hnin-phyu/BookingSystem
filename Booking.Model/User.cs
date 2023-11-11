@@ -7,7 +7,7 @@
         public string Password { get; set; }
         public int NumberOfCredits { get; set; }
         public string? PhoneNumber { get; set; }
-        public virtual ICollection<Schedule> Schedules { get; set; }
-        public virtual ICollection<Package> Packages { get; set; }
+        public virtual List<Schedule> Schedules { get; set; }
+        public virtual List<Package> Packages { get; set; }
     }
 }

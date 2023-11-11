@@ -36,7 +36,7 @@ namespace Booking.Web.Repository
 
         public async Task<User> GetUser(int id)
         {
-            return await this._dbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
+            return await this._dbContext.Users.Include(x => x.Packages).Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
         public async Task<int> GetUserId(string email)

@@ -26,16 +26,6 @@ namespace Booking.Web.Repository
             await this._dbContext.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
-        {
-            await this._dbContext.Packages.Where(u => u.Id == id).ExecuteDeleteAsync();
-        }
-
-        public async Task<List<Package>> GetAllPackages()
-        {
-            return await this._dbContext.Packages.ToListAsync();
-        }
-
         public async Task<List<Package>> GetAllPackagesByCountry(Country country)
         {
             return await this._dbContext.Packages.Where(p =>p.Country == country).ToListAsync();
@@ -43,22 +33,15 @@ namespace Booking.Web.Repository
 
         public async Task<Package> GetPackage(int id)
         {
-            return await this._dbContext.Packages.Where(u => u.Id == id).FirstOrDefaultAsync();
+            return await _dbContext.Packages.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
-        public async Task Update(EditPackageVM package)
+        public async Task<List<Package>> GetPurchasedPackages(int userId)
         {
-            this._dbContext.Packages.Update(new Package
-            {
-                Id = package.Id,
-                Name = package.Name,
-                Fee = package.Fee,
-                Description = package.Description,
-                EndTime = package.EndTime,
-                StartTime = package.StartTime,
-                Country = package.Country,
-            });
-            await this._dbContext.SaveChangesAsync();
+            var user = await _dbContext.Users.Include(x => x.Packages).FirstOrDefaultAsync(x => x.Id == userId);
+            if(user == null)
+                return new List<Package>();
+            return user.Packages;
         }
     }
 }

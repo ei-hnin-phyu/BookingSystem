@@ -1,8 +1,8 @@
-﻿@model Booking.Model.User
-
+﻿@page
+@* @model Booking.Web.Views.Users.ProfileModel
 @{
-    ViewData["Title"] = "Details";
-}
+} *@
+@model Booking.Model.User
 
 <h1>Details</h1>
 
@@ -61,22 +61,23 @@
                         </th>
                     </tr>
                 </thead>
+                <tbody>
+                @* @for (int i = 0; i < Model.Packages.Count; i++)
+                {
+                    <tr class="address">
+                        <td><input asp-for="Packages[i].Name" class="form-control" /></td>
+                        <td><input asp-for="Packages[i].StartTime" class="form-control" /></td>
+                        <td><input asp-for="Packages[i].EndTime" class="form-control" /></td>
+                        <td><input asp-for="Packages[i].Country" class="form-control" /></td>
+                        <td><input asp-for="Packages[i].Description" class="form-control" /></td>
+                        <td><input asp-for="Packages[i].Fee" class="form-control" /></td>
+                    </tr>
+                } *@
+                </tbody>
             </table>
-            @for (int i = 0; i < Model.Packages.Count; i++)
-            {
-                <tr class="address">
-                    <td><input asp-for="Packages[i].Name" class="form-control" /></td>
-                    <td><input asp-for="Packages[i].StartTime" class="form-control" /></td>
-                    <td><input asp-for="Packages[i].EndTime" class="form-control" /></td>
-                    <td><input asp-for="Packages[i].Country" class="form-control" /></td>
-                    <td><input asp-for="Packages[i].Description" class="form-control" /></td>
-                    <td><input asp-for="Packages[i].Fee" class="form-control" /></td>
-                </tr>
-            }
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <a href="@Url.Action("Index", "Packages")" class="btn btn-secondary">Back To Packages</a>
 </div>
