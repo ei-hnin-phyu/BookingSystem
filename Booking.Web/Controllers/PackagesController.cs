@@ -11,84 +11,84 @@ using Booking.Web.Repository.Interface;
 
 namespace Booking.Web.Controllers
 {
-    public class UsersController : Controller
+    public class PackagesController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IPackageRepository _packageRepository;
 
-        public UsersController(IUserRepository userRepository)
+        public PackagesController(IPackageRepository packageRepository)
         {
-            this._userRepository = userRepository;
+            _packageRepository = packageRepository;
         }
 
-        // GET: Users
+        // GET: Packages
         public async Task<IActionResult> Index()
         {
-              return View(await this._userRepository.GetAllUsers());
+            return View(await _packageRepository.GetAllPackages());
         }
 
-        // GET: Users/Details/5
+        // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
+            var pid = (int)id;
+            var package = await _packageRepository.GetPackage(pid);
+            if (package == null)
+            {
+                return NotFound();
+            }
 
-            var userid = (int)id;
-            var user = await this._userRepository.GetUser(userid);
-            return View(user);
+            return View(package);
         }
 
-        // GET: Users/Create
+        // GET: Packages/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
+        // POST: Packages/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Email,UserName,Password,NumberOfCredits,Country,PhoneNumber")] CreateUserVM user)
+        public async Task<IActionResult> Create([Bind("Name,Description,Country,Fee,StartTime,EndTime")] CreatePackageVM package)
         {
             if (ModelState.IsValid)
             {
-                await this._userRepository.Create(new CreateUserVM
-                {
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    Country = user.Country,
-                    Name = user.Name,
-                    NumberOfCredits = user.NumberOfCredits,
-                    Password = user.Password,
-                    PhoneNumber = user.PhoneNumber
-                });
+                await _packageRepository.Create(package);
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(package);
         }
 
-        // GET: Users/Edit/5
+        // GET: Packages/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
-            var userid = (int)id;
-            var user = await this._userRepository.GetUser(userid);
-            return View(user);
+
+            var pid = (int)id;
+            var package = await _packageRepository.GetPackage(pid);
+            if (package == null)
+            {
+                return NotFound();
+            }
+            return View(package);
         }
 
-        // POST: Users/Edit/5
+        // POST: Packages/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,UserName,Password,NumberOfCredits,Country,PhoneNumber")] EditUserVM user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Country,Fee,StartTime,EndTime")] EditPackageVM package)
         {
-            if (id != user.Id)
+            if (id != package.Id)
             {
                 return NotFound();
             }
@@ -97,18 +97,19 @@ namespace Booking.Web.Controllers
             {
                 try
                 {
-                    await this._userRepository.Update(user);
+                    await _packageRepository.Update(package);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
+                    
                     throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(user);
+            return View(package);
         }
 
-        // GET: Users/Delete/5
+        // GET: Packages/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -116,22 +117,22 @@ namespace Booking.Web.Controllers
                 return NotFound();
             }
 
-            var userid = (int)id;
-            var user = await this._userRepository.GetUser(userid);
+            var pid = (int)id;
+            var package = await _packageRepository.GetPackage(pid);
+            if (package == null)
+            {
+                return NotFound();
+            }
 
-            return View(user);
+            return View(package);
         }
 
-        // POST: Users/Delete/5
+        // POST: Packages/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (id == null)
-            {
-                return Problem("Entity set 'BookingDbContext.Users'  is null.");
-            }
-            await this._userRepository.Delete(id);           
+            await _packageRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
     }

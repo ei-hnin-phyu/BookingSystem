@@ -47,6 +47,7 @@ builder.Services.ConfigureOptions<ConfigureJwtOptions>();
 builder.Services.Configure<JWTAuth>(Configuration.GetSection("Jwt"));
 builder.Services.AddSingleton<IJWTAuthService, JWTAuthService>();
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
