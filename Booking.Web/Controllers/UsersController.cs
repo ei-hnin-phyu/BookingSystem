@@ -6,44 +6,36 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Booking.Model;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
+using Booking.Web.Models;
+using Booking.Web.Repository.Interface;
 
 namespace Booking.Web.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly BookingDbContext _context;
+        private readonly IUserRepository _userRepository;
 
-        public UsersController(BookingDbContext context)
+        public UsersController(IUserRepository userRepository)
         {
-            _context = context;
+            this._userRepository = userRepository;
         }
 
         // GET: Users
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Index()
         {
-              return _context.Users != null ? 
-                          View(await _context.Users.ToListAsync()) :
-                          Problem("Entity set 'BookingDbContext.Users'  is null.");
+              return View(await this._userRepository.GetAllUsers());
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
+            var userid = (int)id;
+            var user = await this._userRepository.GetUser(userid);
             return View(user);
         }
 
@@ -58,12 +50,20 @@ namespace Booking.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Email,Password,NumberOfCredits,Country,PhoneNumber")] User user)
+        public async Task<IActionResult> Create([Bind("Name,Email,UserName,Password,NumberOfCredits,Country,PhoneNumber")] CreateUserVM user)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
+                await this._userRepository.Create(new CreateUserVM
+                {
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    Country = user.Country,
+                    Name = user.Name,
+                    NumberOfCredits = user.NumberOfCredits,
+                   Password = user.Password,
+                    PhoneNumber = user.PhoneNumber
+                });
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
@@ -72,16 +72,12 @@ namespace Booking.Web.Controllers
         // GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null)
             {
                 return NotFound();
             }
-
-            var user = await _context.Users.FindAsync(id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var userid = (int)id;
+            var user = await this._userRepository.GetUser(userid);
             return View(user);
         }
 
@@ -90,7 +86,7 @@ namespace Booking.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Password,NumberOfCredits,Country,PhoneNumber")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,UserName,Password,NumberOfCredits,Country,PhoneNumber")] EditUserVM user)
         {
             if (id != user.Id)
             {
@@ -101,19 +97,11 @@ namespace Booking.Web.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    await this._userRepository.Update(user);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!UserExists(user.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    throw;
                 }
                 return RedirectToAction(nameof(Index));
             }
@@ -123,17 +111,13 @@ namespace Booking.Web.Controllers
         // GET: Users/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            var userid = (int)id;
+            var user = await this._userRepository.GetUser(userid);
 
             return View(user);
         }
@@ -143,23 +127,12 @@ namespace Booking.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            if (_context.Users == null)
+            if (id == null)
             {
                 return Problem("Entity set 'BookingDbContext.Users'  is null.");
             }
-            var user = await _context.Users.FindAsync(id);
-            if (user != null)
-            {
-                _context.Users.Remove(user);
-            }
-            
-            await _context.SaveChangesAsync();
+            await this._userRepository.Delete(id);           
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool UserExists(int id)
-        {
-          return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
