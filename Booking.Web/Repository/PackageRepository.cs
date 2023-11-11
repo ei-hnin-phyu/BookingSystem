@@ -36,6 +36,11 @@ namespace Booking.Web.Repository
             return await this._dbContext.Packages.ToListAsync();
         }
 
+        public async Task<List<Package>> GetAllPackagesByCountry(Country country)
+        {
+            return await this._dbContext.Packages.Where(p =>p.Country == country).ToListAsync();
+        }
+
         public async Task<Package> GetPackage(int id)
         {
             return await this._dbContext.Packages.Where(u => u.Id == id).FirstOrDefaultAsync();

@@ -39,6 +39,12 @@ namespace Booking.Web.Repository
             return await this._dbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
+        public async Task<int> GetUserId(string email)
+        {
+            var user = await _dbContext.Users.Where(u => u.Email.Equals(email)).FirstOrDefaultAsync();
+            return user.Id;
+        }
+
         public bool IsValidUser(string email, string password)
         {
             return this._dbContext.Users.Any(u => u.Email.Equals(email) && u.Password.Equals(password));

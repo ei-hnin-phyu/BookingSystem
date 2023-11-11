@@ -9,6 +9,7 @@ using Booking.Model;
 using Booking.Web.Models;
 using Booking.Web.Repository.Interface;
 using Microsoft.AspNetCore.Authorization;
+using Booking.Web.Views.Users;
 
 namespace Booking.Web.Controllers
 {
@@ -20,7 +21,60 @@ namespace Booking.Web.Controllers
         {
             this._userRepository = userRepository;
         }
+        public IActionResult Register()
+        {
+            // Display the login form
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterAsync(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userRepository.Create(new Models.CreateUserVM
+                {
+                    Email = model.Email,
+                    Password = model.Password,
+                });
+                return RedirectToAction("Login", "Users");
+            }
 
+            return View(model);
+        }
+
+        [AllowAnonymous]
+        public IActionResult Login()
+        {
+            // Display the login form
+            return View();
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public async Task<IActionResult> LoginAsync(LoginModel loginModel)
+        {
+            // Validate the username and password. You can use your authentication logic here.
+
+            if (this._userRepository.IsValidUser(loginModel.Email, loginModel.Password))
+            {
+                AddCookie(await this._userRepository.GetUserId(loginModel.Email));
+                return RedirectToAction("Index", "Packages", new { });
+            }
+            else
+            {
+                ViewBag.ErrorMessage = "Invalid credentials. Please try again.";
+                return View();
+            }
+        }
+        private void AddCookie(int id)
+        {
+            Response.Cookies.Append(Constants.UserIdCookie, id.ToString(), new CookieOptions()
+            {
+                Expires = DateTimeOffset.UtcNow.AddDays(1),
+            });
+        }
         // GET: Users
         public async Task<IActionResult> Index()
         {

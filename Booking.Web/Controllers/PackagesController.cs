@@ -8,16 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using Booking.Model;
 using Booking.Web.Models;
 using Booking.Web.Repository.Interface;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Diagnostics.Metrics;
 
 namespace Booking.Web.Controllers
 {
     public class PackagesController : Controller
     {
         private readonly IPackageRepository _packageRepository;
-
-        public PackagesController(IPackageRepository packageRepository)
+        private readonly IScheduleRepository _scheduleRepository;
+        public PackagesController(IPackageRepository packageRepository,IScheduleRepository scheduleRepository)
         {
             _packageRepository = packageRepository;
+            _scheduleRepository = scheduleRepository;
+        }
+        [HttpPost]
+        public async Task<ActionResult> IndexAsync(string country)
+        {
+            // The Country parameter will contain the selected item's value
+            // Perform any necessary actions with the selected value
+
+            return View(await _packageRepository.GetAllPackagesByCountry((Country)int.Parse(country)));
         }
 
         // GET: Packages
@@ -25,7 +36,6 @@ namespace Booking.Web.Controllers
         {
             return View(await _packageRepository.GetAllPackages());
         }
-
         // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -62,6 +72,18 @@ namespace Booking.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(package);
+        }
+        public async Task<IActionResult> ScheduleAsync(int? id)
+        {
+            var userid = String.Empty;
+            var cookie = Request.Cookies.TryGetValue(Constants.UserIdCookie,out userid);
+            await _scheduleRepository.AddSchedule(new CreateScheduleVM
+            {
+                Created = DateTime.UtcNow,
+                PackageId = (int)id,
+                UserId = int.Parse(userid),
+            });
+            return View();
         }
 
         // GET: Packages/Edit/5

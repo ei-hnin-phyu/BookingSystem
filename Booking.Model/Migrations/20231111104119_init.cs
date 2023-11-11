@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace Booking.Model.Migrations
 {
     /// <inheritdoc />
@@ -88,6 +90,7 @@ namespace Booking.Model.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     ScheduleTime = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false),
                     UserId = table.Column<int>(type: "int", nullable: false),
                     PackageId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -110,9 +113,19 @@ namespace Booking.Model.Migrations
                 .Annotation("MySql:CharSet", "utf8mb4");
 
             migrationBuilder.InsertData(
+                table: "Packages",
+                columns: new[] { "Id", "Country", "Description", "EndTime", "Fee", "Name", "StartTime" },
+                values: new object[,]
+                {
+                    { 1, 3, "It is yoga class", new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8781), 2, "Yoga class", new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8772) },
+                    { 2, 1, "It is golf class", new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8786), 2, "Golf class", new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8786) },
+                    { 3, 0, "It is luagage class", new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8788), 2, "Language class", new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8787) }
+                });
+
+            migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Email", "NumberOfCredits", "Password", "PhoneNumber" },
-                values: new object[] { 1, "myuser123@gmail.com", 10, "12345", "09245555775" });
+                values: new object[] { 1, "eihninphyu1996@gmail.com", 10, "12345", "09245555775" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PackageUser_UsersId",

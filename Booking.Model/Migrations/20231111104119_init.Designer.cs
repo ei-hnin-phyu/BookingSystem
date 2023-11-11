@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Model.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20231111085606_init")]
+    [Migration("20231111104119_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -50,6 +50,38 @@ namespace Booking.Model.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Packages");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Country = 3,
+                            Description = "It is yoga class",
+                            EndTime = new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8781),
+                            Fee = 2,
+                            Name = "Yoga class",
+                            StartTime = new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8772)
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Country = 1,
+                            Description = "It is golf class",
+                            EndTime = new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8786),
+                            Fee = 2,
+                            Name = "Golf class",
+                            StartTime = new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8786)
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Country = 0,
+                            Description = "It is luagage class",
+                            EndTime = new DateTime(2023, 11, 18, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8788),
+                            Fee = 2,
+                            Name = "Language class",
+                            StartTime = new DateTime(2023, 11, 11, 17, 11, 19, 183, DateTimeKind.Local).AddTicks(8787)
+                        });
                 });
 
             modelBuilder.Entity("Booking.Model.Schedule", b =>
@@ -63,6 +95,9 @@ namespace Booking.Model.Migrations
 
                     b.Property<DateTime>("ScheduleTime")
                         .HasColumnType("datetime(6)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -104,7 +139,7 @@ namespace Booking.Model.Migrations
                         new
                         {
                             Id = 1,
-                            Email = "myuser123@gmail.com",
+                            Email = "eihninphyu1996@gmail.com",
                             NumberOfCredits = 10,
                             Password = "12345",
                             PhoneNumber = "09245555775"

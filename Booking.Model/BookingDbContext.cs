@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace Booking.Model
 {
@@ -23,11 +24,42 @@ namespace Booking.Model
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
-                Email = "myuser123@gmail.com",
+                Email = "eihninphyu1996@gmail.com",
                 NumberOfCredits = 10,
                 PhoneNumber = "09245555775",
                 Password="12345",
             });
+            modelBuilder.Entity<Package>().HasData(new Package
+                {
+                    Id = 1,
+                    Name = "Yoga class",
+                    Country =Country.US,
+                    Fee = 2,
+                    StartTime= DateTime.Now,
+                    EndTime= DateTime.Now.AddDays(7),
+                    Description = "It is yoga class"
+                },
+                new Package
+                {
+                    Id = 2,
+                    Name = "Golf class",
+                    Country = Country.Singapore,
+                    Fee = 2,
+                    StartTime = DateTime.Now,
+                    EndTime = DateTime.Now.AddDays(7),
+                    Description = "It is golf class"
+                },
+                new Package
+                {
+                    Id = 3,
+                    Name = "Language class",
+                    Country = Country.Myanmar,
+                    Fee = 2,
+                    StartTime = DateTime.Now,
+                    EndTime = DateTime.Now.AddDays(7),
+                    Description = "It is luagage class"
+                }
+            );
             base.OnModelCreating(modelBuilder);
         }
     }

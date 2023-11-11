@@ -10,5 +10,6 @@ namespace Booking.Web.Repository.Interface
         Task Delete(int id);
         Task<Package> GetPackage(int id);
         Task<List<Package>> GetAllPackages();
+        Task<List<Package>> GetAllPackagesByCountry(Country country);
     }
 }

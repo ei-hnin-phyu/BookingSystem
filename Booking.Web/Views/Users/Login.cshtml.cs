@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 
-namespace Booking.Web.Views.Account
+namespace Booking.Web.Views.Users
 {
     public class LoginModel
     {
