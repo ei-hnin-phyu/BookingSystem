@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Booking.Model;
 using Booking.Web.Models;
 using Booking.Web.Repository.Interface;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Booking.Web.Controllers
 {
@@ -56,10 +57,7 @@ namespace Booking.Web.Controllers
             {
                 await this._userRepository.Create(new CreateUserVM
                 {
-                    UserName = user.UserName,
                     Email = user.Email,
-                    Country = user.Country,
-                    Name = user.Name,
                     NumberOfCredits = user.NumberOfCredits,
                     Password = user.Password,
                     PhoneNumber = user.PhoneNumber

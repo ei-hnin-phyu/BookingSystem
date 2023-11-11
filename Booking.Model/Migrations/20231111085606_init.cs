@@ -42,17 +42,12 @@ namespace Booking.Model.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    Name = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
                     Email = table.Column<string>(type: "longtext", nullable: false)
-                        .Annotation("MySql:CharSet", "utf8mb4"),
-                    UserName = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     Password = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     NumberOfCredits = table.Column<int>(type: "int", nullable: false),
-                    Country = table.Column<int>(type: "int", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "longtext", nullable: false)
+                    PhoneNumber = table.Column<string>(type: "longtext", nullable: true)
                         .Annotation("MySql:CharSet", "utf8mb4")
                 },
                 constraints: table =>
@@ -116,8 +111,8 @@ namespace Booking.Model.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Country", "Email", "Name", "NumberOfCredits", "Password", "PhoneNumber", "UserName" },
-                values: new object[] { 1, 0, "myuser123@gmail.com", "User001", 10, "12345", "09245555775", "admin" });
+                columns: new[] { "Id", "Email", "NumberOfCredits", "Password", "PhoneNumber" },
+                values: new object[] { 1, "myuser123@gmail.com", 10, "12345", "09245555775" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_PackageUser_UsersId",

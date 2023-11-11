@@ -23,12 +23,9 @@ namespace Booking.Model
             modelBuilder.Entity<User>().HasData(new User
             {
                 Id = 1,
-                Country = Country.Myanmar,
                 Email = "myuser123@gmail.com",
-                Name = "User001",
                 NumberOfCredits = 10,
                 PhoneNumber = "09245555775",
-                UserName="admin",
                 Password="12345",
             });
             base.OnModelCreating(modelBuilder);

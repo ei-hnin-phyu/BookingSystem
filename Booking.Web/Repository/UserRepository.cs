@@ -16,12 +16,9 @@ namespace Booking.Web.Repository
         {
             await this._dbContext.Users.AddAsync(new User 
             {
-                Name = userVM.Name,
                 Email = userVM.Email,
                 NumberOfCredits= userVM.NumberOfCredits,
-                Country = userVM.Country,
                 Password = userVM.Password,
-                UserName = userVM.Name,
                 PhoneNumber= userVM.PhoneNumber
                 });
             await this._dbContext.SaveChangesAsync();
@@ -42,9 +39,9 @@ namespace Booking.Web.Repository
             return await this._dbContext.Users.Where(u => u.Id == id).FirstOrDefaultAsync();
         }
 
-        public bool IsValidUser(string username, string password)
+        public bool IsValidUser(string email, string password)
         {
-            return this._dbContext.Users.Any(u => u.UserName.Equals(username) && u.Password.Equals(password));
+            return this._dbContext.Users.Any(u => u.Email.Equals(email) && u.Password.Equals(password));
         }
 
         public async Task Update(EditUserVM userVM)
@@ -52,12 +49,9 @@ namespace Booking.Web.Repository
             this._dbContext.Users.Update(new User
             {
                 Id= userVM.Id,
-                Name = userVM.Name,
                 Email = userVM.Email,
                 NumberOfCredits = userVM.NumberOfCredits,
-                Country = userVM.Country,
                 Password = userVM.Password,
-                UserName = userVM.Name,
                 PhoneNumber = userVM.PhoneNumber
             });
             await this._dbContext.SaveChangesAsync();

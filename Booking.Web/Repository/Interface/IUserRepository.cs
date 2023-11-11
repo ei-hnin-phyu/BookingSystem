@@ -10,7 +10,7 @@ namespace Booking.Web.Repository.Interface
 {
     public interface IUserRepository
     {
-        bool IsValidUser(string username,string password);
+        bool IsValidUser(string email,string password);
         Task Create(CreateUserVM userVM);
         Task Update(EditUserVM userVM);
         Task Delete(int id);

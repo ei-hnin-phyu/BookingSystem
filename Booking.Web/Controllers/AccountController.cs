@@ -1,8 +1,7 @@
 ﻿using Booking.Web.Repository.Interface;
-using Booking.Web.Services;
+using Booking.Web.Views.Account;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Booking.Web.Controllers
 {
@@ -10,12 +9,35 @@ namespace Booking.Web.Controllers
     {
         private IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
-        private readonly IJWTAuthService _jwtService;
-        public AccountController(IConfiguration configuration,IUserRepository userRepository,IJWTAuthService authService) { 
+        public AccountController(IConfiguration configuration,IUserRepository userRepository) { 
             this._configuration = configuration;
             this._userRepository = userRepository;
-            this._jwtService = authService;
         }
+
+        [AllowAnonymous]
+        public IActionResult Register()
+        {
+            // Display the login form
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RegisterAsync(RegisterModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _userRepository.Create(new Models.CreateUserVM
+                {
+                    Email = model.Email,
+                    Password = model.Password,
+                });
+                return RedirectToAction("Login", "Account");
+            }
+
+            return View(model);
+        }
+
         [AllowAnonymous]
         public IActionResult Login()
         {
@@ -25,30 +47,20 @@ namespace Booking.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public IActionResult Login(string username, string password)
+        public IActionResult Login(LoginModel loginModel)
         {
             // Validate the username and password. You can use your authentication logic here.
 
-            if (this._userRepository.IsValidUser(username, password))
+            if (this._userRepository.IsValidUser(loginModel.Email,loginModel.Password))
             {
-                var token = GenerateBearerToken(username);
-                return RedirectToAction("Index", "Users", new { token = token });
+                return RedirectToAction("Index", "Users", new { });
             }
             else
             {
                 ViewBag.ErrorMessage = "Invalid credentials. Please try again.";
                 return View();
             }
-        }
-
-        private string GenerateBearerToken(string username)
-        {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, username)
-            };
-            return this._jwtService.CreateJwtSecurityToken(claims);
-        }
+        }        
     }
 
 }

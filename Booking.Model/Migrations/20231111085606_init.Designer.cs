@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Model.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20231111044522_init")]
+    [Migration("20231111085606_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -82,14 +82,7 @@ namespace Booking.Model.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("Country")
-                        .HasColumnType("int");
-
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("longtext");
 
@@ -101,11 +94,6 @@ namespace Booking.Model.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
                         .HasColumnType("longtext");
 
                     b.HasKey("Id");
@@ -116,13 +104,10 @@ namespace Booking.Model.Migrations
                         new
                         {
                             Id = 1,
-                            Country = 0,
                             Email = "myuser123@gmail.com",
-                            Name = "User001",
                             NumberOfCredits = 10,
                             Password = "12345",
-                            PhoneNumber = "09245555775",
-                            UserName = "admin"
+                            PhoneNumber = "09245555775"
                         });
                 });
 
