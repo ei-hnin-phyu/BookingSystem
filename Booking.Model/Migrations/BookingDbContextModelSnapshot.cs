@@ -101,6 +101,10 @@ namespace Booking.Model.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -114,7 +118,8 @@ namespace Booking.Model.Migrations
                             Name = "User001",
                             NumberOfCredits = 10,
                             Password = "12345",
-                            PhoneNumber = "09245555775"
+                            PhoneNumber = "09245555775",
+                            UserName = "admin"
                         });
                 });
 

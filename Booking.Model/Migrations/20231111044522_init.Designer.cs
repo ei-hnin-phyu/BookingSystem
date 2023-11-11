@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Model.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20231111042538_init")]
+    [Migration("20231111044522_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -104,6 +104,10 @@ namespace Booking.Model.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<string>("UserName")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.HasKey("Id");
 
                     b.ToTable("Users");
@@ -117,7 +121,8 @@ namespace Booking.Model.Migrations
                             Name = "User001",
                             NumberOfCredits = 10,
                             Password = "12345",
-                            PhoneNumber = "09245555775"
+                            PhoneNumber = "09245555775",
+                            UserName = "admin"
                         });
                 });
 

@@ -28,6 +28,7 @@ namespace Booking.Model
                 Name = "User001",
                 NumberOfCredits = 10,
                 PhoneNumber = "09245555775",
+                UserName="admin",
                 Password="12345",
             });
             base.OnModelCreating(modelBuilder);
