@@ -23,19 +23,27 @@ namespace Booking.Web.Controllers
             _packageRepository = packageRepository;
             _scheduleRepository = scheduleRepository;
         }
+        private int? GetUserId()
+        {
+            var userid = String.Empty;
+            var cookie = Request.Cookies.TryGetValue(Constants.UserIdCookie, out userid);
+            if (cookie)
+                return int.Parse(userid);
+            return null;
+        }
         [HttpPost]
         public async Task<ActionResult> IndexAsync(string country)
         {
             // The Country parameter will contain the selected item's value
             // Perform any necessary actions with the selected value
 
-            return View(await _packageRepository.GetAllPackagesByCountry((Country)int.Parse(country)));
+            return View(await _packageRepository.GetAllPackagesByCountry((Country)int.Parse(country),(int)GetUserId()));
         }
 
         // GET: Packages
         public async Task<IActionResult> Index()
         {
-            return View(await _packageRepository.GetAllPackagesByCountry((Country)0));
+            return View(await _packageRepository.GetAllPackagesByCountry((Country)0, (int)GetUserId()));
         }
         // GET: Packages/Details/5
         public async Task<IActionResult> Details(int? id)

@@ -30,7 +30,14 @@ namespace Booking.Web.Repository
         {
             return await this._dbContext.Packages.Where(p =>p.Country == country).ToListAsync();
         }
-
+        public async Task<List<Package>> GetAllPackagesByCountry(Country country,int userId)
+        {
+            var allpackages = await this._dbContext.Packages.Include(d => d.Users).Where(p => p.Country == country && p.Users.Count <5).ToListAsync();
+            var user = await this._dbContext.Users.Include(x => x.Packages).FirstOrDefaultAsync(x => x.Id == userId);
+            var userpackages = user.Packages.Where(x => x.Country == country);
+            var dist = allpackages.Except(userpackages).ToList();
+            return dist;
+        }
         public async Task<Package> GetPackage(int id)
         {
             return await _dbContext.Packages.Where(u => u.Id == id).FirstOrDefaultAsync();
