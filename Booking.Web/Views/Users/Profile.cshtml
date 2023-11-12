@@ -1,8 +1,8 @@
 ﻿@page
-@* @model Booking.Web.Views.Users.ProfileModel
+@model Booking.Web.Views.Users.ProfileModel
 @{
-} *@
-@model Booking.Model.User
+}
+@* @model Booking.Model.User *@
 
 <h1>Details</h1>
 
@@ -35,7 +35,7 @@
             @Html.DisplayFor(model => model.PhoneNumber)
         </dd>
         <dt>
-
+            @Html.DisplayNameFor(model => model.Packages)
         </dt>
         <dd>
             <table>

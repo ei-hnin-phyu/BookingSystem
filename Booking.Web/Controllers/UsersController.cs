@@ -105,7 +105,16 @@ namespace Booking.Web.Controllers
             {
                 user.Packages = new List<Package>();
             }
-            return View(user);
+            var userprofile = new ProfileModel
+            {
+                Email = user.Email,
+                NumberOfCredits = user.NumberOfCredits,
+                Password = user.Password,
+                PhoneNumber = user.PhoneNumber,
+                Packages = user.Packages,
+                Schedules = user.Schedules
+            };
+            return View(userprofile);
         }
 
         // GET: Users/Create

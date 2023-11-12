@@ -11,7 +11,7 @@ namespace Booking.Web.Views.Users
         public string Password { get; set; }
         public int NumberOfCredits { get; set; }
         public string? PhoneNumber { get; set; }
-        public List<Schedule> Schedules { get; set; }
-        public List<Package> Packages { get; set; }
+        public List<Schedule> Schedules { get; set; } = new List<Schedule>();
+        public List<Package> Packages { get; set; } = new List<Package>();
     }
 }
