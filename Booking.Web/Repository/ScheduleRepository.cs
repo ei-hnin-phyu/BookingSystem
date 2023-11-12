@@ -10,10 +10,12 @@ namespace Booking.Web.Repository
     {
         private readonly BookingDbContext _dbContext;
         private readonly IDatabase _redisDb;
-        public ScheduleRepository(BookingDbContext dbContext, IDatabase redisDb)
+        private readonly IConfiguration _configuration;
+        public ScheduleRepository(BookingDbContext dbContext, IDatabase redisDb,IConfiguration configuration)
         {
             _dbContext = dbContext;
             this._redisDb = redisDb;
+            this._configuration = configuration;
         }
 
         public async Task CreateBooking(CreateScheduleVM scheduleVM)
@@ -28,7 +30,7 @@ namespace Booking.Web.Repository
                     ScheduleTime = DateTime.UtcNow,
                     UserId = user.Id,
                 };
-                if (package.Users.Count < 5)
+                if (package.Users.Count < int.Parse(_configuration["MaxBookingCount"])) //MaxBookingCount
                 {
                     //book
                     user.NumberOfCredits -= package.Fee;

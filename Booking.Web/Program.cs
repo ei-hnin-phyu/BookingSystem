@@ -1,12 +1,17 @@
 using Booking.Model;
 using Booking.Web.Repository;
 using Booking.Web.Repository.Interface;
+using Booking.Web.Services;
+using Hangfire;
+using Hangfire.Redis.StackExchange;
+using Microsoft.CodeAnalysis.Differencing;
 using Microsoft.EntityFrameworkCore;
 using Pipelines.Sockets.Unofficial;
 using Serilog;
 using Serilog.Events;
 using StackExchange.Redis;
 using System.Configuration;
+using static System.Net.Mime.MediaTypeNames;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,12 +23,25 @@ var connectionString = Configuration["ConnectionString"];
 builder.Services.AddDbContext<BookingDbContext>(o => {
     o.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
-ConfigureRedisConnection(Configuration);
+var redis = ConfigureRedisConnection(Configuration);
+builder.Services.AddHangfire(configuration =>
+{
+    configuration.UseRedisStorage(redis, new RedisStorageOptions { Prefix = "bookingsystem", Db = 1 });
+});
+builder.Services.AddHangfireServer();
+
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IPackageRepository, PackageRepository>();
 builder.Services.AddScoped<IScheduleRepository, ScheduleRepository>();
-var app = builder.Build();
+builder.Services.AddHostedService<JobManager>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+app.UseHangfireDashboard();
+app.UseSwagger();
+app.UseSwaggerUI();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -38,7 +56,7 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-
+GlobalJobFilters.Filters.Add(new AutomaticRetryAttribute { Attempts = 5, DelaysInSeconds = new int[] { 1 } });
 app.Run();
 
 ConnectionMultiplexer ConfigureRedisConnection(IConfiguration configuration)
